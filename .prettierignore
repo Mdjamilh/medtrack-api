@@ -1,0 +1,5 @@
+package-lock.json
+dist
+drizzle/meta
+.pglite
+coverage
