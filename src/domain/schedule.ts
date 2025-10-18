@@ -28,7 +28,7 @@ export function expandSchedule(rule: ScheduleRule, { from, to, timeZone }: { fro
     if (date < rule.startDate || (rule.endDate && date > rule.endDate) || !days.has(day.getDay())) continue;
 
     for (const time of times) {
-      const [hours, minutes] = time.split(":").map(Number);
+      const [hours = 0, minutes = 0] = time.split(":").map(Number);
       const instant = new TZDate(day.getFullYear(), day.getMonth(), day.getDate(), hours, minutes, timeZone);
       const at = new Date(instant.getTime());
       if (at >= from && at < to) due.push(at);
