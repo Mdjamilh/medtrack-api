@@ -179,3 +179,5 @@ export const ErrorResponse = z
     }),
   })
   .openapi("Error");
+
+export const MedicationList = z.object({ data: z.array(Medication) }).openapi("MedicationList");
