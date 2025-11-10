@@ -21,17 +21,25 @@ export const TimeZone = z
   .refine(isTimeZone, "Must be an IANA timezone such as America/New_York.")
   .openapi({ example: "America/New_York" });
 
+/** Trimmed and lowercased before validation, so pasted emails with stray spaces still work. */
+const Email = z
+  .string()
+  .trim()
+  .toLowerCase()
+  .pipe(z.email().max(254))
+  .openapi({ type: "string", format: "email", example: "ava@example.com" });
+
 // Auth & users
 export const RegisterBody = z
   .object({
-    email: z.email().max(254),
+    email: Email,
     password: z.string().min(8, "Use at least 8 characters.").max(128),
     name: z.string().trim().min(1).max(100),
     timezone: TimeZone.optional(),
   })
   .openapi("RegisterBody");
 
-export const LoginBody = z.object({ email: z.email(), password: z.string().min(1) }).openapi("LoginBody");
+export const LoginBody = z.object({ email: Email, password: z.string().min(1) }).openapi("LoginBody");
 
 export const User = z
   .object({ id: Id, email: z.email(), name: z.string(), timezone: z.string(), createdAt: z.iso.datetime() })
