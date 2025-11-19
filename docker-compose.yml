@@ -1,0 +1,28 @@
+# Local stack: Postgres + the API. Run migrations once with:
+#   docker compose run --rm api npx drizzle-kit migrate   (or npm run db:migrate from the host)
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: medtrack
+      POSTGRES_PASSWORD: medtrack
+      POSTGRES_DB: medtrack
+    ports: ["5432:5432"]
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U medtrack"]
+      interval: 5s
+      retries: 10
+
+  api:
+    build: .
+    environment:
+      DATABASE_URL: postgres://medtrack:medtrack@db:5432/medtrack
+      JWT_SECRET: change-me-to-a-long-random-string-of-32-plus-chars
+    ports: ["4000:4000"]
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  pgdata:
