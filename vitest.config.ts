@@ -7,5 +7,11 @@ export default defineConfig({
     env: { NODE_ENV: "test", AUTH_RATE_LIMIT: "1000" },
     testTimeout: 30_000,
     hookTimeout: 60_000,
+    coverage: {
+      provider: "v8",
+      include: ["src/**/*.ts"],
+      exclude: ["src/server.ts", "src/**/*.test.ts"],
+      reporter: ["text-summary", "html"],
+    },
   },
 });
