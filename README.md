@@ -9,7 +9,9 @@
 
 A REST API for tracking medication schedules, logging doses and reporting adherence. Patients add medications with a schedule such as "8:00 and 20:00 every day", log each dose as taken or skipped, and get adherence rates and streaks. Every time is computed in the patient's own timezone.
 
-**Interactive docs:** https://medtrack-api.vercel.app/docs (live demo on an in-memory database, so data resets when the instance restarts)
+**Interactive docs:** https://medtrack-api-sigma.vercel.app/docs
+
+> The live demo runs on an in-memory database for zero cost. Data resets when the serverless instance restarts, and if Vercel starts a second instance, an account created on one won't exist on the other. Connect a Postgres database (`DATABASE_URL`, for example a free Neon project) for persistent data.
 
 ![Swagger UI](docs/swagger-ui.png)
 
