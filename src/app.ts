@@ -2,9 +2,9 @@ import cors from "cors";
 import express from "express";
 import helmet from "helmet";
 import { pinoHttp } from "pino-http";
-import swaggerUi from "swagger-ui-express";
 
 import type { Database } from "./db/types.js";
+import { docsPage } from "./http/docs-page.js";
 import { errorHandler, notFoundHandler } from "./http/errors.js";
 import { openApiDocument } from "./http/openapi.js";
 import { env } from "./lib/env.js";
@@ -20,8 +20,9 @@ export function createApp({ db }: { db: Database }) {
 
   const spec = openApiDocument();
   app.get("/openapi.json", (_req, res) => res.json(spec));
-  // Swagger UI ships inline scripts, so it's mounted before the strict CSP below.
-  app.use("/docs", swaggerUi.serve, swaggerUi.setup(spec, { customSiteTitle: "MedTrack API docs" }));
+  // The docs page uses an inline script and a CDN, so it's served before the strict CSP below.
+  const docsHtml = docsPage({ specUrl: "/openapi.json", title: "MedTrack API docs" });
+  app.get(["/docs", "/docs/"], (_req, res) => res.type("html").send(docsHtml));
 
   app.use(helmet());
   app.use(cors({ origin: env.CORS_ORIGINS === "*" ? true : env.CORS_ORIGINS.split(",").map((o) => o.trim()) }));
