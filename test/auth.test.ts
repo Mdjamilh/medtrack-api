@@ -101,6 +101,11 @@ describe("platform", () => {
     expect(spec.body.openapi).toBe("3.0.3");
     expect(Object.keys(spec.body.paths)).toContain("/v1/adherence");
 
+    const docs = await t.api().get("/docs");
+    expect(docs.headers["content-type"]).toContain("text/html");
+    expect(docs.text).toContain("swagger-ui-dist@");
+    expect(docs.text).toContain('"/openapi.json"');
+
     const missing = await t.api().get("/v1/nope");
     expect(missing.status).toBe(404);
     expect(missing.body.error.code).toBe("NOT_FOUND");
